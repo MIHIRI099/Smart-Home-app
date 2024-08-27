@@ -9,7 +9,7 @@ export default function Index() {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: '#cccfe2', // Dark background for contrast
+        backgroundColor: '#cccfe2', 
       }}
     >
       <View

@@ -5,19 +5,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { router } from "expo-router"; // Adjust the import according to your navigation library
 
-const AdminScreen = () => {
-    const [isAdmin, setIsAdmin] = useState(false);
+const Dashboard = () => {
+    const [username, setUsername] = useState('');
 
-    // Check the user type from AsyncStorage
     useEffect(() => {
-        const checkUserType = async () => {
-            const userType = await AsyncStorage.getItem('userType');
-            if (userType === 'ADMIN') {
-                setIsAdmin(true);
-            }
+        const loadUserData = async () => {
+            const storedUsername = await AsyncStorage.getItem('username');
+            if (storedUsername) setUsername(storedUsername);
         };
 
-        checkUserType();
+        loadUserData();
     }, []);
 
     return (
@@ -27,34 +24,37 @@ const AdminScreen = () => {
                 source={require('./../../assets/images/background.jpeg')} // Background image path
             />
             <View style={styles.overlay}>
-                <Text style={styles.title}>Admin Dashboard</Text>
+     
+            <Text style={styles.title}>Welcome, {username}</Text>
                 <View style={styles.buttonsContainer}>
                     <TouchableOpacity
                         style={styles.actionButton}
-                        onPress={() => router.push('/approve-registrations')}>
-                        <Text style={styles.actionButtonText}>Approve User Registrations</Text>
+                        onPress={() => router.push('/register')}>
+                        <Text style={styles.actionButtonText}>Register Users</Text>
                     </TouchableOpacity>
+                </View>
+                <View style={styles.buttonsContainer}>
                     <TouchableOpacity
                         style={styles.actionButton}
                         onPress={() => router.push('/logs')}>
                         <Text style={styles.actionButtonText}>View User Logs</Text>
                     </TouchableOpacity>
                 </View>
+                <View style={styles.buttonsContainer}>
+                    <TouchableOpacity
+                        style={styles.doorButton}
+                        onPress={() => router.push('/camara')}>
+                        <Text style={styles.actionButtonText}>View Front Door</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
             <View style={styles.navBar}>
-                <TouchableOpacity style={styles.navButton} onPress={() => router.push('/user')}>
-                    <Icon name="home" size={24} color="#fff" />
-                    <Text style={styles.navButtonText}>Home</Text>
-                </TouchableOpacity>
-                {isAdmin && (
-                    <TouchableOpacity style={styles.navButton}>
-                        <Icon name="cogs" size={24} color="#fff" />
-                        <Text style={styles.navButtonText}>Admin</Text>
-                    </TouchableOpacity>
-                )}
                 <TouchableOpacity
                     style={styles.navButton}
-                    onPress={() => router.push('/login')}>
+                    onPress={async () => {
+                        await AsyncStorage.clear();
+                        router.push('/login');
+                    }}>
                     <Icon name="sign-out" size={24} color="#fff" />
                     <Text style={styles.navButtonText}>Logout</Text>
                 </TouchableOpacity>
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(100, 100, 100, 0.5',
+        backgroundColor: 'rgba(100, 100, 100, 0.4)',
         paddingTop: 60,
     },
     title: {
@@ -93,7 +93,16 @@ const styles = StyleSheet.create({
     actionButton: {
         width: '100%',
         alignItems: 'center',
-        backgroundColor: '#be975f',
+        backgroundColor: '#6b7de4',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 5,
+        marginVertical: 10,
+    },
+    doorButton: {
+        width: '100%',
+        alignItems: 'center',
+        backgroundColor: '#985cc7',
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 5,
@@ -107,7 +116,7 @@ const styles = StyleSheet.create({
     navBar: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        backgroundColor: '#000000',
+        backgroundColor: '#5956b4', // Updated background color
         padding: 10,
         borderTopWidth: 1,
         borderColor: '#333',
@@ -119,6 +128,7 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 10,
     },
+    
     navButton: {
         alignItems: 'center',
     },
@@ -130,4 +140,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default AdminScreen;
+export default Dashboard;

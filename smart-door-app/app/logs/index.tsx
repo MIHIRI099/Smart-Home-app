@@ -7,42 +7,49 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { router } from "expo-router";
 
 const LogsScreen = () => {
-    const [isAdmin, setIsAdmin] = useState(false);
+    
     const [logs, setLogs] = useState([]);
+    
     const [filteredLogs, setFilteredLogs] = useState([]);
     const [loading, setLoading] = useState(true);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [showDatePicker, setShowDatePicker] = useState(false);
 
-    useEffect(() => {
-        const checkUserType = async () => {
-            const userType = await AsyncStorage.getItem('userType');
-            if (userType === 'ADMIN') {
-                setIsAdmin(true);
-            }
-        };
-
-        checkUserType();
-    }, []);
 
     useEffect(() => {
         const fetchLogs = async () => {
-            try {
-                const response = await fetch('http://192.168.8.101:8000/admin/logs', {
-                    method: 'GET'
-                });
-                const logsData = await response.json();
-                setLogs(logsData);
-                filterLogsByDate(logsData, selectedDate);
-            } catch (error) {
-                console.error('Error fetching logs:', error);
-            } finally {
-                setLoading(false);
-            }
+            // Simulating an API call with dummy data
+            const logsData = [
+                {
+                    id: 1,
+                    timestamp: new Date().toISOString(),
+                    username: 'user1',
+                    log_type: 'in',
+                },
+               
+                {
+                    id: 3,
+                    timestamp: new Date().toISOString(),
+                    username: 'user3',
+                    log_type: 'in',
+                },
+                
+                {
+                    id: 5,
+                    timestamp: new Date().toISOString(),
+                    username: 'user5',
+                    log_type: 'in',
+                },
+            ];
+    
+            setLogs(logsData);
+            filterLogsByDate(logsData, selectedDate);
+            setLoading(false);
         };
-
+    
         fetchLogs();
     }, [selectedDate]);
+    
 
     const filterLogsByDate = (logsData: any[], date: Date) => {
         const filtered = logsData.filter(log => {
@@ -90,10 +97,10 @@ const LogsScreen = () => {
         <View style={styles.container}>
             <Image
                 style={styles.backgroundImage}
-                source={require('./../../assets/images/welcome.jpg')} // Background image path
+                source={require('./../../assets/images/background.jpeg')} // Background image path
             />
             <View style={styles.overlay}>
-                <Text style={styles.title}>User Logs</Text>
+                <Text style={styles.title}>Activity History</Text>
                 <TouchableOpacity style={styles.button} onPress={() => setShowDatePicker(true)}>
                     <Icon name="calendar" size={20} color="#fff" />
                     <Text style={styles.buttonText}>Select Date</Text>
@@ -118,17 +125,11 @@ const LogsScreen = () => {
                 )}
             </View>
             <View style={styles.navBar}>
-                <TouchableOpacity style={styles.navButton} onPress={() => router.push('/user')}>
-                    <Icon name="home" size={24} color="#fff" />
-                    <Text style={styles.navButtonText}>Home</Text>
-                </TouchableOpacity>
-                {isAdmin && (
                     <TouchableOpacity style={styles.navButton}
-                                      onPress={() => router.push('/admin')}>
-                        <Icon name="cogs" size={24} color="#fff" />
-                        <Text style={styles.navButtonText}>Admin</Text>
+                        onPress={() => router.push('/admin')}>
+                        <Icon name="home" size={24} color="#fff" />
+                        <Text style={styles.navButtonText}>Home</Text>
                     </TouchableOpacity>
-                )}
                 <TouchableOpacity
                     style={styles.navButton}
                     onPress={() => router.push('/login')}>
@@ -153,11 +154,11 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        backgroundColor: 'rgba(100, 100, 100, 0.4)',
         paddingTop: 60,
     },
     title: {
-        fontSize: 35,
+        fontSize: 40,
         color: '#fff',
         fontFamily: 'roboto-bold',
         marginBottom: 10,
@@ -167,11 +168,13 @@ const styles = StyleSheet.create({
     },
     logItem: {
         padding: 15,
+        paddingLeft:40,
+        paddingRight:40,
         marginVertical: 8,
         borderRadius: 10,
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#333',
+        backgroundColor: '#9f5bc6',
         borderColor: '#444',
         borderWidth: 1,
         shadowColor: '#000',
@@ -186,12 +189,12 @@ const styles = StyleSheet.create({
         fontFamily: 'roboto-medium',
     },
     logTime: {
-        fontSize: 12,
+        fontSize: 18,
         color: '#ccc',
         fontFamily: 'roboto',
     },
     logUsername: {
-        fontSize: 16,
+        fontSize: 20,
         color: '#fff',
         fontFamily: 'roboto-medium',
         marginHorizontal: 10,
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     inLog: {
-        backgroundColor: '#4CAF50', // Green for 'in'
+        backgroundColor: '#9f5bc6', // Green for 'in'
     },
     outLog: {
         backgroundColor: '#FF9800', // Orange for 'out'
@@ -212,7 +215,7 @@ const styles = StyleSheet.create({
     navBar: {
         flexDirection: 'row',
         justifyContent: 'space-around',
-        backgroundColor: '#000000',
+        backgroundColor: '#5956b4', // Updated background color
         padding: 10,
         borderTopWidth: 1,
         borderColor: '#333',
@@ -224,6 +227,7 @@ const styles = StyleSheet.create({
         shadowRadius: 10,
         elevation: 10,
     },
+    
     navButton: {
         alignItems: 'center',
     },

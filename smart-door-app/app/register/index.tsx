@@ -38,7 +38,7 @@ const RegisterScreen = () => {
         if (!result.canceled) {
             // @ts-ignore
             setImages(prevImages => {
-                if (prevImages.length < 2) {
+                if (prevImages.length < 5) {
                     return [...prevImages, result.assets[0].uri];
                 }
                 return prevImages;
@@ -49,8 +49,8 @@ const RegisterScreen = () => {
     };
 
     const handleRegister = async () => {
-        if (!name || !username || !password || images.length !== 2) {
-            Alert.alert('Error', 'Please fill all fields and upload exactly 2 images');
+        if (!name || !username || !password || images.length !== 5) {
+            Alert.alert('Error', 'Please fill all fields and upload exactly 5 images');
             return;
         }
 
@@ -71,7 +71,7 @@ const RegisterScreen = () => {
         });
 
         try {
-            const response = await fetch('http://192.168.8.101:8000/user/register', {
+            const response = await fetch('http://lahiru174.ddns.net:8000/users/register', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -135,7 +135,9 @@ const RegisterScreen = () => {
                     </Pressable>
                     </Pressable>
                 </View>
-
+                <Text style={styles.imageUploadText}>
+                    {images.length < 5 ? `Add ${5 - images.length} Image${images.length === 1 ? '' : 's'}` : '5 Images Captured'}
+                </Text>
                 <TextInput
                     style={styles.input}
                     placeholder="Name"
@@ -171,12 +173,7 @@ const RegisterScreen = () => {
                         )}
                     </View>
                 </Pressable>
-                <Text style={styles.loginText}>
-                    Already registered?
-                    <Link href="/login">
-                        <Text style={styles.loginLink}> Login here</Text>
-                    </Link>
-                </Text>
+               
                 
             </View>
         </View>
@@ -300,6 +297,10 @@ const styles = StyleSheet.create({
         backgroundColor: '#2196F3',
     },
     modalCloseText: {
+        color: 'white',
+        fontFamily: 'roboto'
+    },
+    imageUploadText: {
         color: 'white',
         fontFamily: 'roboto'
     },

@@ -44,8 +44,8 @@ export default function RootLayout() {
             <Stack.Screen name="login/index" options={{ headerShown: false }} />
             <Stack.Screen name="register/index" options={{ headerShown: false }} />
             <Stack.Screen name="admin/index" options={{ headerShown: false }} />
-            <Stack.Screen name="user/index" options={{ headerShown: false }} />
             <Stack.Screen name="logs/index" options={{ headerShown: false }} />
+            <Stack.Screen name="camara/index" options={{ headerShown: false }} />
         </Stack>
     );
 }

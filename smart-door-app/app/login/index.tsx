@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     TextInput,
@@ -16,6 +16,7 @@ import { jwtDecode } from 'jwt-decode';
 const LoginScreen = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async () => {
@@ -33,7 +34,7 @@ const LoginScreen = () => {
         console.log('FormData:', formData);
 
         try {
-            const response = await fetch('http://192.168.8.101:8000/user/token', {
+            const response = await fetch('http://lahiru174.ddns.net:8000/users/login', {
                 method: 'POST',
                 body: formData,
             });
@@ -51,21 +52,11 @@ const LoginScreen = () => {
                 // @ts-ignore
                 const username = decodedToken.sub;
                 // @ts-ignore
-                const userType = decodedToken.type;
-                // @ts-ignore
                 const approved = decodedToken.approved;
 
                 await AsyncStorage.setItem('username', username as string);
-                await AsyncStorage.setItem('userType', userType);
                 await AsyncStorage.setItem('approved', String(approved));
-
-                if (userType === 'ADMIN') {
-                    router.push('/admin');
-                } else if (approved) {
-                    router.push('/user');
-                } else {
-                    router.push('/waiting');
-                }
+                router.push('/admin');
 
             } else {
                 Alert.alert('Error', data.message || 'Login failed');
@@ -74,7 +65,7 @@ const LoginScreen = () => {
             console.error('Fetch error:', error);
             Alert.alert('Error', 'An error occurred. Please try again.');
         } finally {
-            setLoading(false); // Hide loader and enable button
+            setLoading(false); 
         }
     };
 
@@ -94,7 +85,6 @@ const LoginScreen = () => {
                     onChangeText={setUsername}
                     editable={!loading}
                 />
-
                 <TextInput
                     style={styles.input}
                     placeholder="Password"
@@ -104,14 +94,6 @@ const LoginScreen = () => {
                     onChangeText={setPassword}
                     editable={!loading}
                 />
-
-                <Text style={styles.signupText}>
-                    Not registered?
-                    <Link href={'/register'}>
-                        <Text style={styles.signupLink}> Sign Up here</Text>
-                    </Link>
-                </Text>
-
                 <Pressable onPress={handleLogin} disabled={loading}>
                     <View style={[styles.loginButton, loading && styles.disabledButton]}>
                         {loading ? (
